@@ -3,7 +3,7 @@ class Rule < ApplicationRecord
   validates :product_code, presence: true
   self.inheritance_column = :type
 
-  def apply(cart_item)
-    raise NotImplementedError
+  def apply(quantity, unit_price)
+    unit_price * quantity
   end
 end
