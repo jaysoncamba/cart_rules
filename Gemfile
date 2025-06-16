@@ -37,6 +37,7 @@ gem "bootsnap", require: false
 gem "importmap-rails"
 gem "stimulus-rails"
 gem "tailwindcss-rails", "~>3.3.1"
+gem "cssbundling-rails"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
