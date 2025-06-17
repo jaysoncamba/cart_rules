@@ -10,7 +10,7 @@ services:
 
   web:
     build: .
-    command: bash -c "rm -f tmp/pids/server.pid && bin/dev"
+    command: bash -c "bin/dev"
     volumes:
       - .:/cart_rules
     ports:
@@ -19,8 +19,8 @@ services:
       - db
     environment:
       DATABASE_URL: postgres://postgres:password@db:5432
-    tty: true
-    stdin_open: true
+      RAILS_ENV: development
+      BUNDLE_WITH: "development test"
 
 volumes:
   db-data:

@@ -27,3 +27,6 @@ RUN mkdir -p tmp
 
 # Default CMD is overridden by docker-compose
 CMD ["bin/rails", "server", "-b", "0.0.0.0"]
+
+COPY entrypoint.sh /usr/bin/
+ENTRYPOINT ["entrypoint.sh"]
