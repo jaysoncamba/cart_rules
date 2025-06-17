@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe "Cart" do
-  let(:green_tea) { create(:product, code: "GR1", name: "Green Tea", price: 3.11) }
+  let(:green_tea)  { create(:product, code: "GR1", name: "Green Tea", price: 3.11) }
   let(:strawberry) { create(:product, code: "SR1", name: "Strawberry", price: 5.00) }
-  let(:coffee) { create(:product, code: "CF1", name: "Coffee", price: 11.23) }
+  let(:coffee)     { create(:product, code: "CF1", name: "Coffee", price: 11.23) }
 
   subject(:cart) { Cart.new }
 
@@ -42,13 +42,13 @@ RSpec.describe "Cart" do
     cart.add_product(coffee, 2)
     cart.add_product(strawberry)
     cart.add_product(coffee)
-    expect(cart.total.round(2)).to eq(expected_total_4)
+    expect(cart.total).to eq(expected_total_4)
   end
 
   it "adds to existing quantity if product is already in cart" do
     cart.add_product(green_tea, 1)
     cart.add_product(green_tea, 2)
-    expect(cart.items["GR1"]).to eq(3)
+    expect(cart.items["GR1"].quantity).to eq(3)
   end
 
   it "recalculates total only when cart changes" do

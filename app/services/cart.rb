@@ -2,40 +2,29 @@ class Cart
   attr_reader :items
 
   def initialize
-    # items = { product_id => quantity }
-    @items = Hash.new(0)
-    @rules = Rule.all
+    @items = {}
+    @dirty = false
+    @total = 0
+    @rules = {}
   end
 
   def add_product(product, quantity = 1)
-    @items[product.code] += quantity
+    code = product.code
+    if @items[code]
+      @items[code].increase_quantity(quantity)
+    else
+      @rules[code] = Rule.where(product_code: code).order(:created_at) unless @rules[code]
+      @items[code] = CartLineItem.new(product:, quantity:, rules: @rules[code])
+    end
+
+    @dirty = true
   end
 
   def total
-    total = 0.0
-
-    @items.each do |product_code, quantity|
-      product = Product.find_by(code: product_code)
-      rule = @rules.find { |r| r.applies_to?(product) }
-
-      if rule
-        total += rule.apply(quantity, product.price)
-      else
-        total += quantity * product.price
-      end
+    if @dirty
+      @total = @items.values.sum(&:total_price).round(2)
+      @dirty = false
     end
-
-    total.round(2)
-  end
-
-  def itemized_summary
-    @items.map do |product_code, quantity|
-      product = Product.find_by(product_code)
-      {
-        product: product.name,
-        quantity: quantity,
-        price_per_unit: product.price
-      }
-    end
+    @total
   end
 end

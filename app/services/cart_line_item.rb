@@ -1,4 +1,5 @@
 class CartLineItem
+  attr_reader :product, :quantity, :rules
   def initialize(product:, quantity:, rules: [])
     @product = product
     @quantity = quantity
