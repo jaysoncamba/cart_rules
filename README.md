@@ -1,24 +1,128 @@
-# README
+# 🍎 Cart Checkout System with Flexible Pricing Rules
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is a flexible cart and checkout system designed in Ruby on Rails that allows dynamic pricing rules using Single Table Inheritance (STI). The system supports common promotional pricing strategies like:
 
-Things you may want to cover:
+* **Buy-One-Get-One-Free** (BOGO)
+* **Bulk Discounts**
+* **Percentage Discounts**
 
-* Ruby version
+---
 
-* System dependencies
+## 🧠 Project Overview
 
-* Configuration
+This system powers a dynamic checkout experience where pricing rules can change frequently due to executive decisions. The checkout engine recalculates totals based on the rules attached to specific products.
 
-* Database creation
+Each rule type has its own logic for applying discounts:
 
-* Database initialization
+* **BogoRule**: Buy 1 Get 1 Free
+* **BulkDiscountRule**: Reduced unit price if a quantity threshold is met
+* **PercentageDiscountRule**: Applies a percentage discount on all items once a threshold is reached
 
-* How to run the test suite
+Products and rules are seeded into the database and can be updated easily for new campaigns or changes in company strategy.
 
-* Services (job queues, cache servers, search engines, etc.)
+---
 
-* Deployment instructions
+## 📋 Assumptions
 
-* ...
+* All monetary values are rounded to **two decimal places** after computations.
+* Rules are **product-specific** and determined by `product_code`.
+* The cart stores quantity and product details internally using `product.code`.
+* Pricing rules are applied **independently** per product (no cross-product promotions).
+* Rule logic is separated using **STI**, making it extendable without modifying core cart logic.
+* The total is recalculated only when the cart changes (dirty checking enabled).
+* A product can have **only one active rule** at a time.
+
+---
+
+## 🧪 Example Rules Setup
+
+* **Green Tea (`GR1`)** – Buy-One-Get-One-Free
+* **Strawberries (`SR1`)** – €4.50 each if 3 or more are bought
+* **Coffee (`CF1`)** – 33.33% off if 3 or more are bought
+
+---
+
+## 🚀 Getting Started
+
+### ✅ Prerequisites
+
+* Docker + Docker Compose
+* Git
+
+### 🔧 First-Time Setup
+
+```bash
+# Clone the project
+git clone https://github.com/yourusername/cart_rules.git
+cd cart_rules
+
+# Build and start the containers
+docker-compose build
+docker-compose up -d
+
+# Install Ruby gems
+docker-compose run --rm web bundle install
+
+# (Optional) Install JS dependencies (if using Tailwind, etc.)
+docker-compose run --rm web yarn install
+
+# Set up the database
+docker-compose run --rm web bin/rails db:create db:migrate
+
+# Seed initial product and rule data
+docker-compose run --rm web bin/rails db:seed
+
+# Run test suite
+docker-compose run --rm -e RAILS_ENV=test web rspec spec --format documentation
+```
+
+---
+
+## 📦 Seed Data
+
+### 🏣 Products
+
+| Code | Name       | Price  |
+| ---- | ---------- | ------ |
+| GR1  | Green Tea  | €3.11  |
+| SR1  | Strawberry | €5.00  |
+| CF1  | Coffee     | €11.23 |
+
+### 💸 Rules
+
+| Type                   | Product | Condition     | Result                 |
+| ---------------------- | ------- | ------------- | ---------------------- |
+| BogoRule               | GR1     | Buy 1         | Get 1 Free             |
+| BulkDiscountRule       | SR1     | Buy 3 or more | Price becomes €4.50    |
+| PercentageDiscountRule | CF1     | Buy 3 or more | 33.33% off all coffees |
+
+---
+
+## 📆 Folder Structure
+
+```plaintext
+app/
+├── models/
+│   ├── rule.rb
+│   ├── bogo_rule.rb
+│   ├── bulk_discount_rule.rb
+│   ├── percentage_discount_rule.rb
+│   └── product.rb
+├── services/
+│   ├── cart.rb
+│   └── cart_line_item.rb      # Handles product quantity and pricing details
+spec/
+├── models/
+├── services/
+├── factories/
+└── support/
+```
+
+---
+
+## ✨ Future Enhancements
+* Allow multiple rules per product with prioritization
+* Support time-limited promotions and rule expiration
+* Currency configuration and support for international pricing
+
+---

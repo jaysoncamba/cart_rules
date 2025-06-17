@@ -1,9 +1,29 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+# Clear existing data
+Rule.delete_all
+Product.delete_all
+
+# Seed products
+green_tea = Product.create!(code: "GR1", name: "Green Tea", price: 3.11)
+strawberry = Product.create!(code: "SR1", name: "Strawberry", price: 5.00)
+coffee = Product.create!(code: "CF1", name: "Coffee", price: 11.23)
+
+# Seed rules
+
+# CEO's rule: Buy-One-Get-One-Free on Green Tea
+BogoRule.create!(
+  product_code: green_tea.code
+)
+
+# COO's rule: Bulk discount on Strawberries (3+ for 4.50€ each)
+BulkDiscountRule.create!(
+  product_code: strawberry.code,
+  threshold: 3,
+  new_price: 4.50
+)
+
+# VP of Engineering's rule: 33.33% off Coffee when buying 3+
+PercentageDiscountRule.create!(
+  product_code: coffee.code,
+  threshold: 3,
+  percent: 33.33
+)
