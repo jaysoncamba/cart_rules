@@ -4,6 +4,6 @@ class BulkDiscountRule < Rule
 
   def apply(quantity, unit_price)
     price_to_use = quantity >= threshold ? new_price : unit_price
-    quantity * price_to_use
+    (quantity * price_to_use).round(2)
   end
 end

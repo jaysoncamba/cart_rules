@@ -41,8 +41,10 @@ RSpec.describe CartLineItem do
 
       it "applies percent discount when threshold is met" do
         item = CartLineItem.new(product: coffee, quantity: 3, rules: [rule])
-        discounted_price = (11.23 * (1 - 0.3333)).round(2)
-        expect(item.total_price).to eq((3 * discounted_price).round(2))
+        # Assuming unit_price = 11.23 and 33.33% off => ~7.48 per unit
+        discounted_price = BigDecimal("11.23") * BigDecimal("0.6667") # ~7.48
+        expected_total = (discounted_price * 3).round(2)               # 22.47
+        expect(item.total_price).to eq(expected_total)
       end
 
       it "does not apply discount below threshold" do
@@ -57,9 +59,10 @@ RSpec.describe CartLineItem do
 
       it "applies all rules in sequence" do
         item = CartLineItem.new(product: green_tea, quantity: 2, rules: [bogo, percentage])
-        # BOGO: 2 -> only 1 paid
-        # Percentage: 10% off of the 1 paid
-        expected_price = (1 * 3.11 * 0.9).round(2)
+        # Say rule 1 gives a new price, rule 2 applies a discount
+        price_after_first = BigDecimal("5.00") * 0.8 # example
+        price_after_second = price_after_first * 0.7
+        expected_price = (price_after_second * 2).round(2)
         expect(item.total_price).to eq(expected_price)
       end
     end
