@@ -5,3 +5,11 @@ default: &default
   username: postgres
   password: password
   pool: 5
+
+development:
+  <<: *default
+  database: cart_rules_development
+
+test:
+  <<: *default
+  database: cart_rules_test

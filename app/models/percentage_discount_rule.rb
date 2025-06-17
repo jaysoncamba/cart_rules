@@ -4,10 +4,12 @@ class PercentageDiscountRule < Rule
 
   def apply(quantity, unit_price)
     if quantity >= threshold
-      discounted_price = unit_price * (1 - (percent / 100.0))
-      quantity * discounted_price.round(2)
+      unit_price = BigDecimal(unit_price.to_s)
+      discount_multiplier = BigDecimal((100 - percent).to_s) / 100
+      total_price = unit_price * quantity * discount_multiplier
+      total_price.round(2)
     else
-      quantity * unit_price
+      (BigDecimal(unit_price.to_s) * quantity).round(2)
     end
   end
 end
