@@ -59,4 +59,47 @@ RSpec.describe "Cart" do
     cart.add_product(strawberry)
     expect(cart.total).not_to eq(previous_total)
   end
+
+  describe "#remove_product" do
+    before do
+      cart.add_product(green_tea, 2)
+    end
+    it "removes the product from the cart" do
+      expect(cart.items[green_tea.code]).to be_present
+      cart.remove_product(green_tea)
+      expect(cart.items[green_tea.code]).to be_nil
+    end
+
+    it "marks the cart as dirty" do
+      cart.remove_product(green_tea)
+      # add another product to force recalculation
+      cart.add_product(strawberry)
+      expect(cart.total).to be > 0 # ensures total is recalculated
+    end
+
+    it "does nothing if product is not in cart" do
+      expect {
+        cart.remove_product(coffee)
+      }.not_to change { cart.items.size }
+    end
+  end
+
+  describe "#to_h" do
+    let(:expected_hash) do
+      {
+        'items' => {
+          'GR1' => { 'quantity' => 2 },
+          'CF1' => { 'quantity' => 1 }
+        }
+      }
+    end
+
+    it "converts a cart to a serializable hash" do
+      cart = Cart.new
+      cart.items["GR1"] = CartLineItem.new(product: green_tea, quantity: 2, rules: Rule.where(product_code: green_tea.code))
+      cart.items["CF1"] = CartLineItem.new(product: coffee, quantity: 1, rules: [])
+
+      expect(cart.to_h).to eq(expected_hash)
+    end
+  end
 end
