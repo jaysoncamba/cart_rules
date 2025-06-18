@@ -19,5 +19,29 @@ class CartsController < ApplicationController
     flash[:error] = "Product not found."
     redirect_to root_path
   end
+
+  def remove_from_cart
+    current_cart.remove_product(Product.find(params[:product_id]))
+    sync_cart!
+
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.replace("cart", partial: "carts/cart", locals: { cart: current_cart }) }
+      format.html { redirect_to root_path, notice: "Item removed from cart." }
+    end
+  end
+
+  def clear_cart
+    reset_cart!
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.replace("cart", partial: "carts/cart", locals: { cart: current_cart }) }
+      format.html { redirect_to root_path, notice: "Cart cleared." }
+    end
+  end
+
+  private
+
+  def reset_cart!
+    session[:cart] = nil
+  end
 end
 

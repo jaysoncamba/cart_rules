@@ -1,0 +1,12 @@
+%div.p-4.rounded.mb-4.flex.items-center.justify-between
+  %div.flex.flex-col
+    %div.text-lg.font-semibold= product.name
+    %div.text-sm Price: $#{product.price}
+
+  = form_with url: add_to_cart_path, method: :post, data: { controller: "cart", action: "submit->cart#submit", cart_target: "form" }, class: "flex.items-center.gap-2" do |f|
+    = hidden_field_tag :product_id, product.id
+    = number_field_tag :quantity, 1, min: 1, class: "w-16 px-2 py-1 border rounded text-sm bg-white text-gray-900 dark:bg-gray-800 dark:text-white dark:border-gray-600"
+    = submit_tag "Add", class: "px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm", data: { cart_target: "button" }
+
+  - if flash[:error].present?
+    %p.text-red-500.text-sm.mt-1.w-full= flash[:error]

@@ -20,6 +20,13 @@ class Cart
     @dirty = true
   end
 
+  def remove_product(product)
+    code = product.code
+    if @items.delete(code)
+      @dirty = true
+    end
+  end
+
   def total
     if @dirty
       @total = @items.values.sum(&:total_price).round(2)
@@ -44,7 +51,6 @@ class Cart
 
     cart
   end
-
 
   def to_h
     {
