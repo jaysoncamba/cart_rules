@@ -1,15 +1,16 @@
 default: &default
   adapter: sqlite3
-  encoding: unicode
-  host: db
-  username: postgres
-  password: password
   pool: 5
+  timeout: 5000
 
 development:
   <<: *default
-  database: cart_rules_development
+  database: db/development.sqlite3
 
 test:
   <<: *default
-  database: cart_rules_test
+  database: db/test.sqlite3
+
+production:
+  <<: *default
+  database: db/production.sqlite3
