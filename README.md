@@ -14,9 +14,9 @@ This system powers a dynamic checkout experience where pricing rules can change 
 
 Each rule type has its own logic for applying discounts:
 
-* **BogoRule**: Buy 1 Get 1 Free
-* **BulkDiscountRule**: Reduced unit price if a quantity threshold is met
-* **PercentageDiscountRule**: Applies a percentage discount on all items once a threshold is reached
+* **BogoRule**: Buy 1 Get 1 Free  
+* **BulkDiscountRule**: Reduced unit price if a quantity threshold is met  
+* **PercentageDiscountRule**: Applies a percentage discount on all items once a threshold is reached  
 
 Products and rules are seeded into the database and can be updated easily for new campaigns or changes in company strategy.
 
@@ -36,9 +36,9 @@ Products and rules are seeded into the database and can be updated easily for ne
 
 ## 🧪 Example Rules Setup
 
-* **Green Tea (`GR1`)** – Buy-One-Get-One-Free
-* **Strawberries (`SR1`)** – €4.50 each if 3 or more are bought
-* **Coffee (`CF1`)** – 33.33% off if 3 or more are bought
+* **Green Tea (`GR1`)** – Buy-One-Get-One-Free  
+* **Strawberries (`SR1`)** – €4.50 each if 3 or more are bought  
+* **Coffee (`CF1`)** – 33.33% off if 3 or more are bought  
 
 ---
 
@@ -46,8 +46,10 @@ Products and rules are seeded into the database and can be updated easily for ne
 
 ### ✅ Prerequisites
 
-* Docker + Docker Compose
-* Git
+* Ruby 3.x  
+* Rails 7.1+  
+* SQLite3  
+* Node.js & Yarn (for TailwindCSS)  
 
 ### 🔧 First-Time Setup
 
@@ -56,24 +58,20 @@ Products and rules are seeded into the database and can be updated easily for ne
 git clone https://github.com/yourusername/cart_rules.git
 cd cart_rules
 
-# Build and start the containers
-docker-compose build
-docker-compose up -d
-
 # Install Ruby gems
-docker-compose run --rm web bundle install
+bundle install
 
-# (Optional) Install JS dependencies (if using Tailwind, etc.)
-docker-compose run --rm web yarn install
+# Install JS dependencies
+yarn install
 
 # Set up the database
-docker-compose run --rm web bin/rails db:create db:migrate
+bin/rails db:create db:migrate
 
 # Seed initial product and rule data
-docker-compose run --rm web bin/rails db:seed
+bin/rails db:seed
 
 # Run test suite
-docker-compose run --rm -e RAILS_ENV=test web rspec spec --format documentation
+bin/rspec
 ```
 
 ---
@@ -83,7 +81,7 @@ docker-compose run --rm -e RAILS_ENV=test web rspec spec --format documentation
 ### 🏣 Products
 
 | Code | Name       | Price  |
-| ---- | ---------- | ------ |
+|------|------------|--------|
 | GR1  | Green Tea  | €3.11  |
 | SR1  | Strawberry | €5.00  |
 | CF1  | Coffee     | €11.23 |
@@ -91,7 +89,7 @@ docker-compose run --rm -e RAILS_ENV=test web rspec spec --format documentation
 ### 💸 Rules
 
 | Type                   | Product | Condition     | Result                 |
-| ---------------------- | ------- | ------------- | ---------------------- |
+|------------------------|---------|---------------|------------------------|
 | BogoRule               | GR1     | Buy 1         | Get 1 Free             |
 | BulkDiscountRule       | SR1     | Buy 3 or more | Price becomes €4.50    |
 | PercentageDiscountRule | CF1     | Buy 3 or more | 33.33% off all coffees |
@@ -121,8 +119,8 @@ spec/
 ---
 
 ## ✨ Future Enhancements
-* Allow multiple rules per product with prioritization
-* Support time-limited promotions and rule expiration
+* Add pages for adding rule and products
+* Convert cart service object into model
+* Allow multiple rules per product with prioritization  
+* Support time-limited promotions and rule expiration  
 * Currency configuration and support for international pricing
-
----
