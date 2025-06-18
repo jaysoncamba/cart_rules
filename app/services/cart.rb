@@ -27,4 +27,30 @@ class Cart
     end
     @total
   end
+
+  def self.from_hash(hash)
+    cart = Cart.new
+
+    # Rebuild items from the hash
+    raw_items = hash['items'] || {}
+    raw_items.each do |code, data|
+      product = Product.find_by(code: code)
+      next unless product
+
+      quantity = data['quantity']
+      rules = Rule.where(product_code: code).order(:created_at)
+      cart.items[code] = CartLineItem.new(product: product, quantity: quantity, rules: rules)
+    end
+
+    cart
+  end
+
+
+  def to_h
+    {
+      'items' => @items.transform_values do |item|
+        { 'quantity' => item.quantity }
+      end
+    }
+  end
 end

@@ -2,7 +2,7 @@ class CartLineItem
   attr_reader :product, :quantity, :rules
   def initialize(product:, quantity:, rules: [])
     @product = product
-    @quantity = quantity
+    @quantity = quantity.to_i
     @rules = rules
   end
 

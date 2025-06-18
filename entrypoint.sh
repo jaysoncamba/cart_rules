@@ -10,6 +10,8 @@ until pg_isready -h db -U postgres; do
   sleep 1
 done
 
+bundle check || bundle install
+
 # Setup DB if needed
 echo "Running database setup..."
 bundle exec rails db:prepare
