@@ -8,8 +8,6 @@ services:
       bundle install
       yarn install --cwd .
       bin/rails assets:precompile
-      bin/rails db:schema:load
-      bin/rails db:seed
     startCommand: |
       bundle exec rails server -b 0.0.0.0 -p $PORT
     envVars:
