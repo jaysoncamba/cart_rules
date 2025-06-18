@@ -37,6 +37,8 @@ gem "importmap-rails"
 gem "stimulus-rails"
 gem "cssbundling-rails"
 gem 'turbo-rails'
+gem 'haml-rails'
+gem 'hamlit-rails'
 
 
 group :development, :test do
@@ -54,8 +56,6 @@ group :development do
 
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
   # gem "spring"
-  gem 'haml-rails'
-  gem 'hamlit-rails'
   gem 'html2haml', require: false  # required for `haml:erb2haml`
 end
 
