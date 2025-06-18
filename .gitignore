@@ -38,6 +38,6 @@
 !/app/assets/builds/.keep
 
 /node_modules
-# /db/*.sqlite3
-# /db/*.sqlite3-shm
-# /db/*.sqlite3-wal
+/db/*.sqlite3
+/db/*.sqlite3-shm
+/db/*.sqlite3-wal
